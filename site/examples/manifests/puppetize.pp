@@ -1,28 +1,22 @@
-<%
-case $osfamily {
-  'RedHat': {
-    $path  = '/etc/motd'
-    $owner = 'root'
-    $group = 'root'
-    $mode  = '0644'
-  }
-  'windows': {
-    $path  = 'C:/Users/Administrator/Desktop/README.txt'
-    $owner = 'Administrator'
-    $group = 'Administrators'
-    $mode  = '0664'
-  }
-}
--%>
-file { '<%= $path %>':
-  ensure  => file,
-  owner   => '<%= $owner %>',
-  group   => '<%= $group %>',
-  mode    => '<%= $mode %>',
-  content => "Hey, Puppet is fun!\n",
-}
+class examples::puppetize {
 
-package { 'cowsay':
-  ensure   => present,
-  provider => gem,
+  if $osfamily == 'RedHat' {
+    file { '/root/example.pp':
+      ensure  => file,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0644',
+      content => epp('examples/example.epp'),
+    }
+  }
+  else {
+    file { 'C:/Users/Administrator/example.pp':
+      ensure  => file,
+      owner   => 'Administrator',
+      group   => 'Administrator',
+      mode    => '0664',
+      content => epp('examples/example.epp'),
+    }
+  }
+  
 }
